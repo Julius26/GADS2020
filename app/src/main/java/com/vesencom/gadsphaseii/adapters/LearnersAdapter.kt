@@ -11,23 +11,22 @@ import com.vesencom.gadsphaseii.R
 import com.vesencom.gadsphaseii.models.Learner
 import kotlinx.android.synthetic.main.top_learners_layout.view.*
 
-class LearnersAdapter() : RecyclerView.Adapter<LearnersAdapter.LearnersViewHolder>() {
+class LearnersAdapter : RecyclerView.Adapter<LearnersAdapter.LearnersViewHolder>() {
 
-        private var learnersList: List<Learner> = ArrayList()
+        private var learnersList: List<Learner> = emptyList()
 //
-    class LearnersViewHolder(itemview: View) :
-        RecyclerView.ViewHolder(itemview) {
-        private val imageViewLearnerBadge: ImageView = itemview.imgViewTopBadge
-        private val textVName: TextView = itemview.tvName
-        private val hoursCountry: TextView = itemview.tvHoursCountry
+    class LearnersViewHolder(itemView: View) :
+        RecyclerView.ViewHolder(itemView) {
+        private val imageViewLearnerBadge: ImageView = itemView.imgViewTopBadge
+        private val textVName: TextView = itemView.tvName
+        private val hoursCountry: TextView = itemView.tvHoursCountry
 
         fun bindLearners(learner: Learner) {
             with(learner) {
                 imageViewLearnerBadge.load(badgeUrl)
                 textVName.text = name
-                val hours = hours.toString()
-                val country = country
-                hoursCountry.text = "$hours , $country"
+                val hoursAndCountry = "$hours , $country"
+                hoursCountry.text = hoursAndCountry
             }
         }
 //
@@ -47,7 +46,7 @@ class LearnersAdapter() : RecyclerView.Adapter<LearnersAdapter.LearnersViewHolde
     }
 
     fun updateList(learnerList: List<Learner>){
-        learnersList = learnerList
+        this.learnersList = learnerList
         notifyDataSetChanged()
     }
 

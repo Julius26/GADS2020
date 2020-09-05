@@ -1,10 +1,10 @@
 package com.vesencom.gadsphaseii.network.state
 
-import com.vesencom.gadsphaseii.models.LearnerResponseModel
+import com.vesencom.gadsphaseii.models.Learner
 
 sealed class NetworkState {
 
-    data class Success(val data: LearnerResponseModel) :
+    data class Success(val data: List<Learner>) :
         NetworkState()
     object  InvalidData: NetworkState()
 

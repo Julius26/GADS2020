@@ -1,16 +1,13 @@
 package com.vesencom.gadsphaseii.ui.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-
 import android.view.View
-
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vesencom.gadsphaseii.R
-
 import com.vesencom.gadsphaseii.adapters.LearnersAdapter
-import com.vesencom.gadsphaseii.models.LearnerResponseModel
+import com.vesencom.gadsphaseii.models.Learner
 import com.vesencom.gadsphaseii.network.ApiClients
 import com.vesencom.gadsphaseii.network.ApiService
 import com.vesencom.gadsphaseii.network.state.NetworkState
@@ -23,14 +20,12 @@ class TopLearners : Fragment(R.layout.fragment_top_learners) {
 
     private val apiService =
         ApiClients().getClient().create(ApiService::class.java)
-    private lateinit var learnersAdapter: LearnersAdapter
+    private val learnersAdapter: LearnersAdapter by lazy { LearnersAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        learnersAdapter = LearnersAdapter()
-
-        recyclerViewId.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        recyclerViewId.layoutManager = LinearLayoutManager(requireContext())
         recyclerViewId.adapter = learnersAdapter
 
         getLearners()
@@ -96,10 +91,9 @@ class TopLearners : Fragment(R.layout.fragment_top_learners) {
         errorMessageText.text = message
     }
 
-    private fun showLearners(learnersResponseModel: LearnerResponseModel){
+    private fun showLearners(learners: List<Learner>){
         hideEmptyView()
-
-        learnersAdapter.updateList(learnersResponseModel.results)
+        learnersAdapter.updateList(learners)
     }
 
     private fun showEmptyView(){
