@@ -1,0 +1,126 @@
+package com.vesencom.gadsphaseii.ui.fragments
+
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+
+import android.view.View
+
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.vesencom.gadsphaseii.R
+
+import com.vesencom.gadsphaseii.adapters.LearnersAdapter
+import com.vesencom.gadsphaseii.models.LearnerResponseModel
+import com.vesencom.gadsphaseii.network.ApiClients
+import com.vesencom.gadsphaseii.network.ApiService
+import com.vesencom.gadsphaseii.network.state.NetworkState
+import com.vesencom.gadsphaseii.utils.hide
+import com.vesencom.gadsphaseii.utils.show
+import kotlinx.android.synthetic.main.fragment_top_learners.*
+import java.io.IOException
+
+class TopLearners : Fragment(R.layout.fragment_top_learners) {
+
+    private val apiService =
+        ApiClients().getClient().create(ApiService::class.java)
+    private lateinit var learnersAdapter: LearnersAdapter
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        learnersAdapter = LearnersAdapter()
+
+        recyclerViewId.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        recyclerViewId.adapter = learnersAdapter
+
+        getLearners()
+        lifecycleScope.launchWhenStarted {
+            swipeContainer.setOnRefreshListener {
+                getLearners()
+            }
+        }
+    }
+
+    private fun getLearners() {
+        lifecycleScope.launchWhenStarted {
+            hideEmptyView()
+            showRefreshDialog()
+            val learnersResult = fetchLearners()
+            handleLearnersResult(learnersResult)
+        }
+    }
+
+    private suspend fun fetchLearners(): NetworkState {
+        return try {
+            val response = apiService.getHours()
+//            val learnerResponseModel = response.body()
+            if (response.isSuccessful) {
+                NetworkState.Success(response.body()!!)
+            } else {
+                when (response.code()) {
+                    403 -> NetworkState.HttpErrors.ResourceForbidden(response.message())
+                    404 -> NetworkState.HttpErrors.ResourceNotFound(response.message())
+                    500 -> NetworkState.HttpErrors.InternalServerError(response.message())
+                    502 -> NetworkState.HttpErrors.BadGateWay(response.message())
+                    301 -> NetworkState.HttpErrors.ResourceRemoved(response.message())
+                    302 -> NetworkState.HttpErrors.RemovedResourceFound(response.message())
+                    else -> {
+                        NetworkState.Error(response.message())
+                    }
+                }
+            }
+        } catch (error: IOException) {
+            NetworkState.NetworkException(error.message!!)
+        }
+
+    }
+
+    private fun handleLearnersResult(networkState: NetworkState){
+        return when(networkState) {
+            is NetworkState.Success -> showLearners(networkState.data)
+            is NetworkState.HttpErrors.ResourceForbidden -> handleError(networkState.exception)
+            is NetworkState.HttpErrors.ResourceNotFound -> handleError(networkState.exception)
+            is NetworkState.HttpErrors.InternalServerError -> handleError(networkState.exception)
+            is NetworkState.HttpErrors.BadGateWay -> handleError(networkState.exception)
+            is NetworkState.HttpErrors.ResourceRemoved -> handleError(networkState.exception)
+            is NetworkState.HttpErrors.RemovedResourceFound -> handleError(networkState.exception)
+
+            is NetworkState.InvalidData -> showEmptyView()
+            is NetworkState.Error -> handleError(networkState.error)
+            is NetworkState.NetworkException -> handleError(networkState.error)
+        }
+    }
+
+    private fun handleError(message : String){
+        hideRefreshDialog()
+        errorMessageText.text = message
+    }
+
+    private fun showLearners(learnersResponseModel: LearnerResponseModel){
+        hideEmptyView()
+
+        learnersAdapter.updateList(learnersResponseModel.results)
+    }
+
+    private fun showEmptyView(){
+        errorMessageText.show()
+        recyclerViewId.hide()
+        hideRefreshDialog()
+    }
+
+    private fun hideEmptyView(){
+        errorMessageText.hide()
+        recyclerViewId.show()
+        hideRefreshDialog()
+    }
+
+    private fun showRefreshDialog(){
+        swipeContainer.isRefreshing = true
+    }
+
+    private fun hideRefreshDialog(){
+        swipeContainer.isRefreshing = false
+    }
+
+
+}

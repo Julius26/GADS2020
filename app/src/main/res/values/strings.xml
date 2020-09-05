@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">GADSPhaseII</string>
+    <string name="title_activity_main">Leader Board</string>
+    <string name="tab_text_1">Learning Leaders</string>
+    <string name="tab_text_2">Skill IQ Leaders</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="_223_hours_sample_kenya">223 Hours Sample, Kenya</string>
+    <string name="john_doe">John Doe</string>
+</resources>
