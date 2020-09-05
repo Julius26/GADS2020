@@ -8,7 +8,7 @@ import retrofit2.http.GET
 interface ApiService {
     @GET("/api/hours/")
 //    suspend fun getHours() : Response<LearnerResponseModel>
-    suspend fun getHours() : Response<List<LearnerResponseModel>>
+    suspend fun getHours() : Response<List<Learner>>
 
     @GET("/api/skilliq/")
     suspend fun getSkillIq() : Response<SkillResponseModel>
