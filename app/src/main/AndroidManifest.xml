@@ -27,7 +27,7 @@
             android:theme="@style/AppTheme"
             />
 
-        <activity android:name=".ui.activities.SubmitActivity"></activity>
+        <activity android:name=".ui.activities.SubmitActivity" />
     </application>
 
 </manifest>

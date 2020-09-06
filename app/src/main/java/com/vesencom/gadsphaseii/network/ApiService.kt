@@ -1,13 +1,12 @@
 package com.vesencom.gadsphaseii.network
 
 import com.vesencom.gadsphaseii.SkillResponseModel
-import com.vesencom.gadsphaseii.models.LearnerResponseModel
+import com.vesencom.gadsphaseii.models.Learner
 import retrofit2.Response
 import retrofit2.http.GET
 
 interface ApiService {
-    @GET("/api/hours/")
-//    suspend fun getHours() : Response<LearnerResponseModel>
+    @GET("/api/hours")
     suspend fun getHours() : Response<List<Learner>>
 
     @GET("/api/skilliq/")
