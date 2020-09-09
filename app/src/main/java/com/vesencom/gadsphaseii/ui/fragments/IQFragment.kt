@@ -35,8 +35,8 @@ class IQFragment : Fragment(R.layout.fragment_i_q) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerViewSkillIq.layoutManager = LinearLayoutManager(requireContext())
-        recyclerViewSkillIq.adapter = skillIQViewAdapter
+        //recyclerViewSkillIq.layoutManager = LinearLayoutManager(requireContext())
+        //recyclerViewSkillIq.adapter = skillIQViewAdapter
 
         getSkillIq()
         lifecycleScope.launchWhenStarted {
@@ -102,7 +102,7 @@ class IQFragment : Fragment(R.layout.fragment_i_q) {
 
     private fun showEmptyView() {
         errorMessageText.show()
-        recyclerViewSkillIq.hide()
+        //recyclerViewSkillIq.hide()
         hideRefreshDialog()
     }
 
@@ -120,7 +120,7 @@ class IQFragment : Fragment(R.layout.fragment_i_q) {
 
     private fun hideEmptyView() {
         errorMessageText.hide()
-        recyclerViewSkillIq.show()
+        //recyclerViewSkillIq.show()
         hideRefreshDialog()
     }
 

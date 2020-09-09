@@ -29,12 +29,6 @@ class TopLearners : Fragment(R.layout.fragment_top_learners) {
 
         recyclerViewId.layoutManager = LinearLayoutManager(requireContext())
         recyclerViewId.adapter = learnersAdapter
-        /*lifecycleScope.launch {
-            val result = apiService.getHours().body()!!
-            learnersAdapter.updateList(result)
-
-        }*/
-
         getLearners()
         lifecycleScope.launchWhenStarted {
             swipeContainer.setOnRefreshListener {
