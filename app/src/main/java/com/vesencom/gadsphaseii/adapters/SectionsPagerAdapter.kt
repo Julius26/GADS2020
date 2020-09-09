@@ -24,7 +24,7 @@ class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm){
             1 -> {
                 IQFragment()
             }
-            else -> { return TopLearners() }
+//            else -> { return TopLearners() }
         }
         return TopLearners()
     }

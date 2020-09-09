@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import coil.api.load
+import coil.transform.CircleCropTransformation
+
 import com.vesencom.gadsphaseii.R
 import com.vesencom.gadsphaseii.models.Learner
 import kotlinx.android.synthetic.main.top_learners_layout.view.*
@@ -15,6 +17,8 @@ class LearnersAdapter : RecyclerView.Adapter<LearnersAdapter.LearnersViewHolder>
         private var learnersList: List<Learner> = emptyList()
 //
     class LearnersViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LearnersViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.top_learners_layout, parent, false)
         return  LearnersViewHolder(itemView)
@@ -26,12 +30,16 @@ class LearnersAdapter : RecyclerView.Adapter<LearnersAdapter.LearnersViewHolder>
     override fun onBindViewHolder(holder: LearnersViewHolder, position: Int) {
         val learner = learnersList[position]
         holder.itemView.apply {
-            Picasso.get().load(learner.badgeUrl).into(imgViewTopBadge)
+
+            imgViewTopBadge.load(learner.badgeUrl){
+                crossfade(true)
+                transformations(CircleCropTransformation())
+            }
+//            imgViewTopBadge.load(learner.badgeUrl)
             tvName.text = learner.name
             val hoursAndCountry = "${learner.hours} , ${learner.country}"
             tvHoursCountry.text = hoursAndCountry
         }
-
     }
 
     fun updateList(learnerList: List<Learner>){
