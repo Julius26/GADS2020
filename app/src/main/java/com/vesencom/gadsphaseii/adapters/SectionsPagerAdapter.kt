@@ -7,9 +7,9 @@ import com.vesencom.gadsphaseii.ui.fragments.IQFragment
 import com.vesencom.gadsphaseii.ui.fragments.TopLearners
 
 
-class MainPagerAdapter(fragmentManager: FragmentManager):
+class SectionsPagerAdapter(fragmentManager: FragmentManager):
     FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT){
-    private val fragments = listOf(TopFragment(), IQFragment())
+    private val fragments = listOf(TopLearners(), IQFragment())
     private val titles = listOf("Learning Leaders", "Skill IQ Leaders")
     override fun getCount(): Int = fragments.size
 
