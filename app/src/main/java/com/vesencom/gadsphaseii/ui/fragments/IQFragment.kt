@@ -5,56 +5,128 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.vesencom.gadsphaseii.R
+import com.vesencom.gadsphaseii.adapters.SkillIQAdapter
+import com.vesencom.gadsphaseii.models.Skill
+import com.vesencom.gadsphaseii.network.ApiClients
+import com.vesencom.gadsphaseii.network.ApiService
+import com.vesencom.gadsphaseii.network.state.NetworkState
+import com.vesencom.gadsphaseii.network.state.NetworkStateIQ
+import com.vesencom.gadsphaseii.utils.hide
+import com.vesencom.gadsphaseii.utils.show
+import kotlinx.android.synthetic.main.fragment_i_q.*
+import kotlinx.android.synthetic.main.fragment_i_q.errorMessageText
+import kotlinx.android.synthetic.main.fragment_i_q.swipeContainer
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import kotlinx.coroutines.launch
+import java.io.IOException
 
-/**
- * A simple [Fragment] subclass.
- * Use the [IQFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class IQFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+class IQFragment : Fragment(R.layout.fragment_i_q) {
+
+    private val apiService =
+        ApiClients().getClient().create(ApiService::class.java)
+
+    private val skillIQViewAdapter: SkillIQAdapter by lazy{ SkillIQAdapter() }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        recyclerViewSkillIq.layoutManager = LinearLayoutManager(requireContext())
+        recyclerViewSkillIq.adapter = skillIQViewAdapter
+
+        getSkillIq()
+        lifecycleScope.launchWhenStarted {
+            swipeContainer.setOnRefreshListener {
+                getSkillIq()
+            }
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_i_q, container, false)
+    private fun getSkillIq() {
+        lifecycleScope.launch {
+            hideEmptyView()
+            showRefreshDialog()
+            val skillIqResult = fetchSkillIQ()
+            handleSkillIQResult(skillIqResult)
+        }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment IQFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            IQFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private suspend fun fetchSkillIQ(): NetworkStateIQ {
+        return try {
+            val response = apiService.getSkillIq()
+
+            if (response.isSuccessful) {
+                NetworkStateIQ.Success(response.body()!!)
+            } else {
+                when (response.code()) {
+                    403 -> NetworkStateIQ.HttpErrors.ResourceForbidden(response.message())
+                    404 -> NetworkStateIQ.HttpErrors.ResourceNotFound(response.message())
+                    500 -> NetworkStateIQ.HttpErrors.InternalServerError(response.message())
+                    502 -> NetworkStateIQ.HttpErrors.BadGateWay(response.message())
+                    301 -> NetworkStateIQ.HttpErrors.ResourceRemoved(response.message())
+                    302 -> NetworkStateIQ.HttpErrors.RemovedResourceFound(response.message())
+                    else -> {
+                        NetworkStateIQ.Error(response.message())
+                    }
                 }
             }
+        } catch (error: IOException) {
+            NetworkStateIQ.NetworkException(error.message!!)
+        }
     }
+
+    private fun handleSkillIQResult(skillIqStateIQState: NetworkStateIQ) {
+        return when(skillIqStateIQState){
+            is NetworkStateIQ.Success -> showSkillIQ(skillIqStateIQState.data)
+            is NetworkStateIQ.HttpErrors.ResourceForbidden -> handleError(skillIqStateIQState.exception)
+            is NetworkStateIQ.HttpErrors.ResourceNotFound -> handleError(skillIqStateIQState.exception)
+            is NetworkStateIQ.HttpErrors.InternalServerError -> handleError(skillIqStateIQState.exception)
+            is NetworkStateIQ.HttpErrors.BadGateWay -> handleError(skillIqStateIQState.exception)
+            is NetworkStateIQ.HttpErrors.ResourceRemoved -> handleError(skillIqStateIQState.exception)
+            is NetworkStateIQ.HttpErrors.RemovedResourceFound -> handleError(skillIqStateIQState.exception)
+
+            is NetworkStateIQ.InvalidData -> showEmptyView()
+            is NetworkStateIQ.Error -> handleError(skillIqStateIQState.error)
+            is NetworkStateIQ.NetworkException -> handleError(skillIqStateIQState.error)
+        }
+    }
+
+    private fun showSkillIQ(skills: List<Skill>) {
+        hideEmptyView()
+        skillIQViewAdapter.updateList(skills)
+    }
+
+    private fun showEmptyView() {
+        errorMessageText.show()
+        recyclerViewSkillIq.hide()
+        hideRefreshDialog()
+    }
+
+    private fun handleError(message: String) {
+        hideRefreshDialog()
+        errorMessageText.text = message
+    }
+
+
+
+
+    private fun showRefreshDialog() {
+        swipeContainer.isRefreshing = true
+    }
+
+    private fun hideEmptyView() {
+        errorMessageText.hide()
+        recyclerViewSkillIq.show()
+        hideRefreshDialog()
+    }
+
+    private fun hideRefreshDialog(){
+        swipeContainer.isRefreshing = false
+    }
+
+
 }
