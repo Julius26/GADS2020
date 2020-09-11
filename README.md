@@ -17,7 +17,7 @@ This app consumes GADS 2020 API and displays a list of top 20 learners in Learni
 
 -Livedata to manage data in a lifecycle aware manner helping reduce memory leaks.
 
-User Interface
+### User Interface
 
 ### SPLASH SCREEN
 <img src="screenshots/launch.png"  height=600px />
