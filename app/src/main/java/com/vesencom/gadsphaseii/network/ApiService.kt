@@ -9,6 +9,6 @@ interface ApiService {
     @GET("/api/hours")
     suspend fun getHours() : Response<List<Learner>>
 
-    @GET("/api/skilliq/")
+    @GET("/api/skilliq")
     suspend fun getSkillIq() : Response<List<Skill>>
 }

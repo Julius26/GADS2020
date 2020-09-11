@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import coil.transform.CircleCropTransformation
+import com.squareup.picasso.Picasso
 import com.vesencom.gadsphaseii.R
 import com.vesencom.gadsphaseii.models.Skill
 import kotlinx.android.synthetic.main.top_skill_iq_layout.view.*
@@ -27,13 +28,14 @@ class SkillIQAdapter : RecyclerView.Adapter<SkillIQAdapter.SkillIQViewHolder>() 
     override fun onBindViewHolder(holder: SkillIQViewHolder, position: Int) {
         val skillIQ = skillIqList[position]
         holder.itemView.apply {
-            imgViewTopBadgeIQ.load(skillIQ.badgeUrl){
+           /* imgViewTopBadgeIQ.load(skillIQ.badgeUrl){
                 crossfade(true)
                 transformations(CircleCropTransformation())
-            }
+            }*/
+            Picasso.get().load(skillIQ.badgeUrl).into(imgViewTopBadgeIQ)
             tvNameSkillIq.text = skillIQ.name
-            val hoursAndCouttry = "${skillIQ.score}, ${skillIQ.country}"
-            tvSkillIqCountry.text = hoursAndCouttry
+            val scoreAndCountry = "${skillIQ.score}, ${skillIQ.country}"
+            tvSkillIqCountry.text = scoreAndCountry
         }
     }
 
@@ -41,7 +43,7 @@ class SkillIQAdapter : RecyclerView.Adapter<SkillIQAdapter.SkillIQViewHolder>() 
 
     fun updateList(skillIqList: List<Skill>){
         this.skillIqList = skillIqList
-        Log.d("adapter", skillIqList.toString())
+        Log.d("iq", skillIqList.toString())
         notifyDataSetChanged()
     }
 }

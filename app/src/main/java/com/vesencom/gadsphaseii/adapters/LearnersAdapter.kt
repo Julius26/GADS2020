@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import coil.transform.CircleCropTransformation
+import com.squareup.picasso.Picasso
 
 import com.vesencom.gadsphaseii.R
 import com.vesencom.gadsphaseii.models.Learner
@@ -31,10 +32,11 @@ class LearnersAdapter : RecyclerView.Adapter<LearnersAdapter.LearnersViewHolder>
         val learner = learnersList[position]
         holder.itemView.apply {
 
-            imgViewTopBadge.load(learner.badgeUrl){
+            /*imgViewTopBadge.load(learner.badgeUrl){
                 crossfade(true)
                 transformations(CircleCropTransformation())
-            }
+            }*/
+            Picasso.get().load(learner.badgeUrl).into(imgViewTopBadge)
 //            imgViewTopBadge.load(learner.badgeUrl)
             tvName.text = learner.name
             val hoursAndCountry = "${learner.hours} , ${learner.country}"
@@ -44,7 +46,7 @@ class LearnersAdapter : RecyclerView.Adapter<LearnersAdapter.LearnersViewHolder>
 
     fun updateList(learnerList: List<Learner>){
         this.learnersList = learnerList
-        Log.d("adapter", learnerList.toString())
+        //Log.d("adapter", learnerList.toString())
         notifyDataSetChanged()
     }
 

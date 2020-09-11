@@ -1,10 +1,8 @@
 package com.vesencom.gadsphaseii.ui.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vesencom.gadsphaseii.R
@@ -12,14 +10,10 @@ import com.vesencom.gadsphaseii.adapters.SkillIQAdapter
 import com.vesencom.gadsphaseii.models.Skill
 import com.vesencom.gadsphaseii.network.ApiClients
 import com.vesencom.gadsphaseii.network.ApiService
-import com.vesencom.gadsphaseii.network.state.NetworkState
 import com.vesencom.gadsphaseii.network.state.NetworkStateIQ
 import com.vesencom.gadsphaseii.utils.hide
 import com.vesencom.gadsphaseii.utils.show
 import kotlinx.android.synthetic.main.fragment_i_q.*
-import kotlinx.android.synthetic.main.fragment_i_q.errorMessageText
-import kotlinx.android.synthetic.main.fragment_i_q.swipeContainer
-
 import kotlinx.coroutines.launch
 import java.io.IOException
 

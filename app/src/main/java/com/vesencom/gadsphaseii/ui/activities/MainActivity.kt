@@ -12,16 +12,14 @@ import com.vesencom.gadsphaseii.adapters.SectionsPagerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
+    private val sectionsPagerAdapter: SectionsPagerAdapter by lazy {
+        SectionsPagerAdapter(supportFragmentManager)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-//        support fragment manager passes the instance of fragment manager to the adapter
-        view_pager.adapter = SectionsPagerAdapter(supportFragmentManager)
-        tabs.setupWithViewPager(view_pager)
-
-
+        tabs.setupWithViewPager(fragmentPager)
+        fragmentPager.adapter = sectionsPagerAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
