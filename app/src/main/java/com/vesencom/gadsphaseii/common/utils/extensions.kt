@@ -1,4 +1,4 @@
-package com.vesencom.gadsphaseii.utils
+package com.vesencom.gadsphaseii.common.utils
 
 import android.view.View
 

@@ -12,8 +12,8 @@ import com.vesencom.gadsphaseii.models.Learner
 import com.vesencom.gadsphaseii.network.ApiClients
 import com.vesencom.gadsphaseii.network.ApiService
 import com.vesencom.gadsphaseii.network.state.NetworkState
-import com.vesencom.gadsphaseii.utils.hide
-import com.vesencom.gadsphaseii.utils.show
+import com.vesencom.gadsphaseii.common.utils.hide
+import com.vesencom.gadsphaseii.common.utils.show
 import kotlinx.android.synthetic.main.fragment_top_learners.*
 import kotlinx.coroutines.launch
 import java.io.IOException

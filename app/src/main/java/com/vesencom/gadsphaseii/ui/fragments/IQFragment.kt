@@ -11,8 +11,8 @@ import com.vesencom.gadsphaseii.models.Skill
 import com.vesencom.gadsphaseii.network.ApiClients
 import com.vesencom.gadsphaseii.network.ApiService
 import com.vesencom.gadsphaseii.network.state.NetworkStateIQ
-import com.vesencom.gadsphaseii.utils.hide
-import com.vesencom.gadsphaseii.utils.show
+import com.vesencom.gadsphaseii.common.utils.hide
+import com.vesencom.gadsphaseii.common.utils.show
 import kotlinx.android.synthetic.main.fragment_i_q.*
 import kotlinx.coroutines.launch
 import java.io.IOException
