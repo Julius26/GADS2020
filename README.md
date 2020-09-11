@@ -3,7 +3,7 @@
 
 This app consumes GADS 2020 API and displays a list of top 20 learners in Learning Leaders Category and Top 20 Leaders in the Skill IQ category.
 
-# CONCEPTS CONVERED IN THIS PROJECT
+# CONCEPTS COVERED IN THIS PROJECT
 
 -Networking in android using Retrofit
 -DI
